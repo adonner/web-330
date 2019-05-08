@@ -3,7 +3,7 @@
 ; Title: donner-exercise-3.3.js
 ; Author: Adam Donner
 ; Date: 4 May 2019
-; Description:
+; Description: Demonstrates the singleton pattern
 ;===========================================
 */
 
@@ -22,6 +22,7 @@ const header = require('../donner-header.js');
 console.log(header.display("Adam", "Donner", "Exercise 3.3"));
 console.log("") // Line break
 
+// This creates a singleton class.
 var DatabaseSingleton = (function() {
   var instance;
   function createInstance() {
@@ -39,6 +40,7 @@ var DatabaseSingleton = (function() {
   }
 })();
 
+// This creates a test function using the singleton class to check values.
 function databaseSingletonTest()
 {
   var oracle = DatabaseSingleton.getInstance();
@@ -47,6 +49,7 @@ function databaseSingletonTest()
   console.log("Same database instance? %s ", oracle === postgres);
 }
 
+//  This calls the function.
 databaseSingletonTest();
 
 // end program
