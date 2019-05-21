@@ -1,0 +1,76 @@
+<!--
+============================================
+; Title: donner-exercise-5.2.html
+; Author: Adam Donner
+; Date: 20 May 2019
+; Description: Demonstrates the use of the Proxy Pattern.
+;===========================================
+-->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Exercise 5.2 - The Proxy Pattern</title>
+    <!--Bootstrap library-->
+    <link
+        rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+
+    <!-- jquery Reference Library -->
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+    <style>
+      #spanProxyResults {
+        color:steelblue;
+        font-size: 1.5rem;
+      }
+
+      body {
+        background-color:ghostwhite;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <a href="#" class="navbar-brand">Home</a>
+    </nav>
+    <br>
+    <br>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Exercise 5.2 - The Proxy Patterns</h2>
+
+          <button class="btn btn-primary" id="btnPreviewProxy">Preview Proxy</button>
+
+          <br>
+          <span id="spanProxyResults"></span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(function() {
+
+        var computer = {
+          make: "Macbook",
+          model: "Pro 15 Inch",
+          display: function() {
+            //Clears the span tag before display content
+            $("#spanProxyResults").html("");
+            //Append the make and model of computer.
+            $("#spanProxyResults").append("<br>Make: " + this.make + "<br>Model: " + this.model)
+          }
+        };
+
+        $("#btnPreviewProxy").click($.proxy(computer, "display"));
+
+      });
+    </script>
+  </body>
+</html>
