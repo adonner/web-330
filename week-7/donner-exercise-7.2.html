@@ -1,0 +1,108 @@
+<!--
+============================================
+; Title: donner-exercise-7.2.html
+; Author: Adam Donner
+; Date: 3 June 2019
+; Description: The "if" Binding
+;===========================================
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <title>Exercise 7.2</title>
+
+    <!-- Stylesheet - Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+      integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+      crossorigin="anonymous"
+    />
+
+    <!-- JavaScript Libraries -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+      integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+      crossorigin="anonymous"
+    />
+
+    <!-- JavaScript Libraries -->
+    <script src="../knockout-3.5.0.js"></script>
+  </head>
+  <body>
+  <!--Creates a navigation bar-->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact Us</a>
+        </li>
+      </ul>
+    </nav>
+    <div role="main" class="container">
+      <br /><br />
+
+      <h2>Donner Exercise 7.2</h2>
+
+      <div class="form-group col-3">
+        <!--Creates field to enter first name-->
+        <label for="txtFirstName">First Name: </label>
+        <input type="text" data-bind="value: firstName" class="form-control" id="txtFirstName"/>
+      </div>
+
+      <!--Display last name field if first name field is entered-->
+      <div data-bind="if: displayLastName">
+        <div class="form-group col-3">
+          <label for="txtAuthor">Last Name: </label>
+          <input type="text" data-bind="value: lastName" class="form-control" id="txtLastName"/>
+        </div>
+      </div>
+
+      <br />
+      <!--Display Full Name-->
+      <div data-bind="if: lastName" class="col-3">
+        <h2>
+          <span id="fullName" class="alert-success" data-bind="text: displayFullName"></span>
+        </h2>
+      </div>
+
+      <br />
+    </div>
+
+    <script>
+      // Declares firstName and lastName as observables.
+      function PersonViewModel() {
+        this.firstName = ko.observable("");
+        this.lastName = ko.observable("");
+
+        // Return computed observable which will return firstName.
+        this.displayLastName = ko.pureComputed(function() {
+          return this.firstName();
+        }, this);
+
+        // Return first and last name.
+        this.displayFullName = ko.pureComputed(function() {
+          return this.firstName() + " " + this.lastName();
+        }, this);
+      }
+
+      ko.applyBindings(new PersonViewModel());
+    </script>
+
+    </script>
+  </body>
+</html>
