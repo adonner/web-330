@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <title>donner-discussion-7.1</title>
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+      integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+      crossorigin="anonymous"
+    />
+
+    <!-- JavaScript Libraries -->
+    <script src="../knockout-3.5.0.js"></script>
+  </head>
+  <body>
+  <!--Creates a navigation bar-->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact Us</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!--Container for Output-->
+    <div class="container" role="main">
+      <br> <br>
+      <!--Student Table-->
+      <h2>Students</h2>
+      <table data-bind = "foreach:Student">
+        <tr data-bind="displayStatus:Status">
+          <td data-bind="text:Id"></td>
+          <td data-bind="text:Name"></td>
+          <td data-bind="text:Status"></td>
+        </tr>
+      </table>
+
+    <script>
+
+
+      function Student(id, name, status) {
+        this.Id = id;
+        this.Name = name;
+        this.Status = status;
+      }
+
+      // Array of student information
+      var studentViewModel = new function() {
+        this.Student = ko.observableArray([
+          new Student(101, "John Smith", "Enrolled"),
+          new Student(102, "Adam Jackson", "Enrolled"),
+          new Student(103, "Jack Johnson", "Graduate"),
+          new Student(104, "Jane Doe", "Hold")
+          ])
+        }
+
+      // Custom binding to change color of text based on status
+      ko.bindingHandlers.displayStatus = {
+        init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+
+        },
+
+        update: function(element, valueAccessor, allBindings, viewModel, bindingContext)
+        {
+          var value = ko.unwrap(valueAccessor());
+          switch (value.toLowerCase()) {
+            case "enrolled":
+              element.style["color"] = "green"
+              break;
+            case "graduate":
+              element.style["color"]= "blue"
+              break;
+            case "hold":
+              element.style["color"] = "red"
+              break;
+          }
+
+        }
+      }
+
+      ko.applyBindings(studentViewModel);
+
+    </script>
+  </body>
