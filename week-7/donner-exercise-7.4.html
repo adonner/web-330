@@ -54,10 +54,6 @@
         background-color: lavender !important;
       }
 
-      a {
-        color: midnightblue;
-      }
-
       a:hover {
         text-decoration: none;
         color: midnightblue;
@@ -96,7 +92,7 @@
           <tr>
             <td data-bind="text: title"></td>
             <td data-bind="text: description"></td>
-            <td><a data-bind="attr: {href: link}" target="blank">
+            <td><a data-bind="attr: {href: link}, style: {color: 'midnightblue', 'font-weight': 500}" target="blank">
               Link to Tutorial
             </a></td>
           </tr>
