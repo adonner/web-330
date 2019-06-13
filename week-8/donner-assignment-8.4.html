@@ -179,9 +179,19 @@
 
           var employee = self.Employee();
 
-          // Check if a field is blank before adding to array
+          // Declares variable that searches for duplicates in the array.
+          var match = ko.utils.arrayFirst(self.Employees(), function(item)
+            {
+              return item.Name == employee.Name;
+            });
+
+          // Check if a field is blank or a duplicate before adding to array
           if(employee.Name == "") {
             self.error("A new employee name is required.");
+            return;
+          }
+          else if (match) {
+            self.error("Duplicate entry.");
             return;
           }
           else {
