@@ -1,0 +1,245 @@
+<!--
+============================================
+; Title: donner-exercise-8.3.html
+; Author: Adam Donner
+; Date: 9 June 2019
+; Description: UD Operations
+;===========================================
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <title>UD Operations</title>
+
+    <!-- Stylesheet - Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+      integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+      crossorigin="anonymous"
+    />
+
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+  <!-- JavaScript Libraries -->
+
+  <script src="../knockout-3.5.0.js"></script>
+
+    <style>
+      a {
+        color: white;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: white;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact Us</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div role="main" class="container">
+      <br /><br />
+
+      <div class="row" data-bind="if: error">
+        <div class="col-sm-12">
+          <div class="alert alert-danger" role="alert">
+            <!-- bind the text observable to the view model -->
+            <strong>Warning!</strong> <span data-bind="text: error()"></span>
+          </div>
+        </div>
+      </div>
+
+      <br />
+
+      <h2>UD Example</h2>
+      <div class="row">
+        <div class="col-sm-8">
+          <div
+            class="card card-inverse"
+            style="background-color: #333; border-color: #333; color: white;"
+          >
+            <div class="card-block p-3">
+              <h3 class="card-title">Employee List</h3>
+              <div class="card-text">
+                <table class="table table-striped table-hover">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th>EmployeeId</th>
+                      <th>Name</th>
+                      <th>Functions</th>
+                    </tr>
+                  </thead>
+                  <!-- Bind the list of employees to view model -->
+                  <tbody data-bind="foreach: Employees">
+                    <tr>
+                      <!-- Bind the Id and Name to td-->
+                      <td data-bind="text: Id"></td>
+                      <td data-bind="text: Name"></td>
+                      <td>
+                        <span>
+                          <!-- Bind the button to edit function -->
+                          <a
+                            href="#"
+                            class="btn btn-success"
+                            data-bind="click: $root.edit"
+                          >
+                            <i class="fa fa-pencil fa-lg"> </i> EDIT
+                          </a>
+                        </span>
+                        |
+                        <span>
+                          <!-- Bind the button to the remove function -->
+                          <a
+                            href="#"
+                            class="btn btn-danger"
+                            data-bind="click: $root.remove"
+                          >
+                            <i class="fa fa-trash-o fa-lg"> </i> DELETE
+                          </a>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- If Employee is set display div -->
+        <div class="col-sm-4" data-bind="if: Employee">
+          <div
+            class="card card-inverse"
+            style="background-color: #333; border-color: #333; color: white;"
+          >
+            <div class="card-block p-3">
+              <h3 class="card-title">Employee List:</h3>
+              <div class="card-text">
+                <div class="form-group">
+                  <label for="txtName">Name:</label>
+                  <!-- Bind the input to Employee.name -->
+                  <input
+                    type="text"
+                    id="txtName"
+                    data-bind="value: Employee().Name"
+                    class="form-control"
+                  />
+                </div>
+
+                <div class="form-group float-right">
+                  <!-- Bind the cancel function to button -->
+                  <button
+                    data-bind="click: $root.cancel"
+                    class="btn btn-group btn-danger"
+                  >
+                    Cancel
+                  </button>
+                  <!-- Bind the update function to button -->
+                  <button
+                    data-bind="click: $root.update"
+                    class="btn btn-group btn-success"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br />
+    </div>
+
+    <script>
+      // Create the Employee object.
+      function Employee(id, name) {
+        this.Id = id;
+        this.Name = name;
+      }
+
+      // This creates the array of employees to display.
+      var employeeList = [
+        new Employee(1, "Jack Johnson"),
+        new Employee(2, "Alice Smith"),
+        new Employee(3, "Clark Kent"),
+        new Employee(4, "Bruce Banner"),
+        new Employee(5, "Alan Moore")
+      ];
+
+      //
+      function EmployeeViewModel() {
+        var self = this;
+
+        // Declare the observables for error, id and name
+        self.error = ko.observable("");
+        self.Id = ko.observable("");
+        self.Name = ko.observable("");
+
+        // Create Employee variable and set properties to observables.
+        var Employee = {
+          Id: self.Id,
+          Name: self.Name
+        };
+
+        // Declare the employee ko observable
+        self.Employee = ko.observable();
+        // Declare the ko employees array observable
+        self.Employees = ko.observableArray(employeeList);
+
+        // Set Employee to edit.
+        self.edit = function(Employee) {
+          self.Employee(Employee);
+        };
+
+        // Set Employee to remove.
+        self.remove = function(Employee) {
+          self.Employees.remove(Employee);
+        };
+
+        // Set Employee to cancel.
+        self.cancel = function() {
+          self.Employee(null);
+        };
+
+        // Update the employee and array.
+        self.update = function() {
+          var l_employee = self.Employee();
+          // Remove the employee from the array.
+          self.Employees.remove(self.Employee());
+          // Push the employee back into the array
+          self.Employees.push(l_employee);
+          // Remove the update box.
+          self.Employee(null);
+        };
+      }
+
+      ko.applyBindings(new EmployeeViewModel());
+    </script>
+  </body>
+</html>

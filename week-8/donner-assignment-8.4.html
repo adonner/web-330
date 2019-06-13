@@ -1,0 +1,220 @@
+<!--
+============================================
+; Title: donner-assignment-8.4.html
+; Author: Adam Donner
+; Date: 11 June 2019
+; Description: CRUD Operations
+;===========================================
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <title>donner-assignment-8.4</title>
+
+    <!-- Stylesheet - Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+      integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+      crossorigin="anonymous"
+    />
+
+    <!--Using Font Awesome for icons. https://fontawesome.com-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+          crossorigin="anonymous">
+
+  <!-- JavaScript Libraries -->
+
+  <script src="../knockout-3.5.0.js"></script>
+
+  </head>
+  <body>
+
+    <div role="main" class="container">
+      <br/><br/>
+
+      <div class="row" data-bind="if:error">
+        <div class="col-sm-12">
+          <div class="alert alert-danger" role="alert">
+            <!-- Bind warning text to the observable on the view model -->
+            <strong>Warning</strong> <span data-bind="text:error()"></span>
+          </div>
+        </div>
+      </div>
+
+      <br/>
+
+      <h2>donner-assignment-8.4</h2>
+
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="card card-inverse" style="background-color: #333;border-color:#333;color:white">
+            <div class="card-block p-3">
+              <h3 class="card-title">Payroll <a href="#" class="btn btn-primary" data-bind="click:$root.add"><i class="fas fa-plus"></i> Add</a></h3>
+              <div class="card-text">
+                <table class="table table-dark table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Employee Id</th>
+                      <th>Name</th>
+                      <th class="text-right">Functions</th>
+                    </tr>
+                  </thead>
+                  <!-- Bind the list of employees to view model -->
+                  <tbody data-bind="foreach: Employees">
+                    <tr>
+                      <!-- Bind the Id and Name to td-->
+                      <td data-bind="text: Id"></td>
+                      <td data-bind="text: Name"></td>
+                      <td class="text-right">
+                        <span>
+                          <!-- Bind the button to edit function -->
+                          <a
+                            href="#"
+                            class="btn btn-success"
+                            data-bind="click: $root.edit"
+                          >
+                            <i class="fas fa-pencil-alt"></i>EDIT
+                          </a>
+                        </span> |
+                        <span>
+                          <!-- Bind the button to remove function -->
+                          <a
+                            href="#"
+                            class="btn btn-danger"
+                            data-bind="click:$root.remove"
+                            >
+                              <i class="fas fa-trash-alt"></i>DELETE
+                          </a>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- if the Employee observable is set display the div -->
+        <div class="col-sm-4" data-bind="if:Employee">
+          <div class="card card-inverse" style="background-color: #333; border-color:#333; color:white">
+            <div class="card-block p-3">
+              <h3 class="card-title">Employee List Item</h3>
+              <div class="card-text">
+                <!-- Bind Employee View Model-->
+                <div class="form-group" data-bind="using: Employee">
+                  <label for="txtName">Name:</label>
+                  <!-- Bind input field to new employee -->
+                  <input type="text" id="txtName" data-bind="value:Name" class="form-control">
+                </div>
+                <div class="form-group float-right">
+                  <!-- Bind the button to cancel function -->
+                  <button data-bind="click: $root.cancel" class="btn btn-group btn-danger">Cancel</button>
+                  <!-- Bind the button to update function -->
+                  <button data-bind="click: $root.update" class="btn btn-group btn-success">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+
+      // Create the Employee object.
+      function Employee(id, name) {
+        this.Id = id;
+        this.Name = name;
+      }
+      // This creates the array of employees to display.
+      var employeeList = [
+        new Employee(1, "Jack Johnson"),
+        new Employee(2, "Alice Smith"),
+        new Employee(3, "Clark Kent"),
+        new Employee(4, "Bruce Banner"),
+        new Employee(5, "Alan Moore")
+      ];
+
+
+      function PayrollViewModel(){
+
+        var self = this;
+
+        // Declare the observables for error, id and name
+        self.error = ko.observable("");
+        self.Id = ko.observable("");
+        self.Name = ko.observable("");
+
+
+        // Declare the observable employee
+        self.Employee = ko.observable();
+        // Declare the observable array of employees
+        self.Employees = ko.observableArray(employeeList);
+
+        // This creates a new instance of an employee
+        self.add = function(){
+          self.Employee(new Employee(0, ""));
+        }
+
+        // Set Employee to edit.
+        self.edit = function(employee){
+          self.Employee(employee);
+        };
+
+        // Set Employee to remove.
+        self.remove = function(employee){
+          self.Employees.remove(employee);
+        };
+
+        self.update = function(){
+
+          var employee = self.Employee();
+
+          // Check if a field is blank before adding to array
+          if(employee.Name == "") {
+            self.error("A new employee name is required.");
+            return;
+          }
+          else {
+            self.error("");
+          }
+
+          // Add unique user id
+          if(employee.Id == 0) {
+
+            // Find the highest Id in the array and add 1
+            ko.utils.arrayForEach(self.Employees(), function(employee){
+                id = employee.Id + 1;
+
+            });
+            // Set the employee id in array
+            employee.Id = id;
+          }
+          else {
+          }
+          // Push the employee into the array
+          self.Employees.push(employee);
+
+          // Clear
+          self.Employee(null);
+        }
+
+        self.cancel = function(){
+          self.Employee(null);
+        };
+      }
+
+        ko.applyBindings(new PayrollViewModel())
+    </script>
+
+  </body>
+</html>
